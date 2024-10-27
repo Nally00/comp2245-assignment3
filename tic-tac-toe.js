@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
    let currentPlayer = "X"; // Track the current player
    const boardState = Array(9).fill(" "); // Array to keep track of each square
    const status = document.getElementById("status"); //div with the id "status"
+   const newGameBtn = document.getElementsByClassName("btn")[0];
 
    // Loop through each square (each div inside #board)
    squares.forEach((square, position) => {
@@ -13,25 +14,15 @@ document.addEventListener("DOMContentLoaded", function () {
        square.classList.add("square");
 
        // Attach the click event listener to each square
-       square.addEventListener("click", () => squareClick(position));
-
-       // Add style effects using hover class
-       square.addEventListener("mouseover", function () {
-            if (!square.textContent) { // Only apply if square is empty
-            square.classList.add("hover");
-            }
-        });
-       
-        // remove hover style effect
-        square.addEventListener("mouseleave", () => {
-            square.classList.remove("hover"); 
-        });
+       square.addEventListener("click", () => squareClick(position));       
 
    });
 
+   hoverEffects();   //add hover effects
+
    // Clicking a square 
    function squareClick(position) {
-
+   
        // Check if square is empty
        if (boardState[position]===" ") {
 
@@ -59,6 +50,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Function to add hover effects to squares
+    function hoverEffects() {
+
+        // remove hover style effect
+        squares.forEach(square => {
+            square.addEventListener("mouseover", function () {
+                if (!square.textContent) { // Only apply if square is empty
+                    square.classList.add("hover");
+                }
+            });
+
+            // remove hover style effect
+            square.addEventListener("mouseleave", () => {
+                square.classList.remove("hover");
+            });
+        });
+    }
+
+
     // Switch to the other player
     function switchPlayer (currentPlayer) {     
        if (currentPlayer === "X") {
@@ -70,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
        }
        return currentPlayer;
     }
+
 
     //Check for the winner
     function winner(currentPlayer) {
@@ -98,6 +109,27 @@ document.addEventListener("DOMContentLoaded", function () {
         return false; //player does not have winning combo
     };
 
+
+     // Clicking New Game button
+     newGameBtn.addEventListener("click", resetGame);
+
+
+     // Function to reset the game
+     function resetGame() {
+       
+         boardState.fill(" ");   // Clear the board array
+         currentPlayer = "X"; // Reset to player X
+         status.textContent = "Move your mouse over a square and click to play an X or an O."; // Reset status message
+         status.classList.remove("you-won"); // Remove winner class
+
+         // Clear the squares on the board
+         squares.forEach(square => {
+            square.textContent = " "; // Clear X or O
+            square.classList.remove("X"); // Remove player classes
+            square.classList.remove("O"); // Remove player classes           
+        }); 
+        hoverEffects();   //add hover effects                 
+     }
 });
 
 
