@@ -7,11 +7,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
    // Loop through each square (each div inside #board)
    squares.forEach((square, position) => {
+    
        // Add the "square" class to each div so it gets the correct styles from the CSS
        square.classList.add("square");
 
        // Attach the click event listener to each square
        square.addEventListener("click", () => squareClick(position));
+
+       // Add style effects using hover class
+       square.addEventListener("mouseover", function () {
+            if (!square.textContent) { // Only apply if square is empty
+            square.classList.add("hover");
+            }
+        });
+       
+        // remove hover style effect
+        square.addEventListener("mouseleave", () => {
+            square.classList.remove("hover"); 
+        });      
    });
 
    // Clicking a square 
