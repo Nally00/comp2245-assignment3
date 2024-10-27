@@ -1,13 +1,14 @@
-// Run code when the page has fully loaded
+// Run code when the page loads
 document.addEventListener("DOMContentLoaded", function () {
-    // Find all the divs inside the element with id "board"
-   const squares = document.querySelectorAll("#board div"); 
+ 
+   const squares = document.querySelectorAll("#board div"); // Find all the divs inside the element with id "board"
    let currentPlayer = "X"; // Track the current player
    const boardState = Array(9).fill(" "); // Array to keep track of each square
+   const status = document.getElementById("status"); //div with the id "status"
 
    // Loop through each square (each div inside #board)
    squares.forEach((square, position) => {
-    
+
        // Add the "square" class to each div so it gets the correct styles from the CSS
        square.classList.add("square");
 
@@ -24,7 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // remove hover style effect
         square.addEventListener("mouseleave", () => {
             square.classList.remove("hover"); 
-        });      
+        });
+
    });
 
    // Clicking a square 
@@ -44,14 +46,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
            // update the board state array
            boardState[position] = currentPlayer;
-
-           //switch to other player
-           currentPlayer= switchPlayer(currentPlayer);
-       }
-   }
+           
+           if (winner(currentPlayer)) {
+                status.textContent = "Congratulations! "+ currentPlayer +" is the Winner!"; // set status message
+                status.classList.add("you-won"); // Add you-won class
+                squares.forEach(square => square.removeEventListener("click",() => squareClick(position))); // Remove click event listeners
+            } 
+            else {
+                //switch to other player
+                currentPlayer= switchPlayer(currentPlayer);
+            }
+        }
+    }
 
     // Switch to the other player
-   function switchPlayer (currentPlayer) {     
+    function switchPlayer (currentPlayer) {     
        if (currentPlayer === "X") {
            currentPlayer = "O";
 
@@ -60,7 +69,42 @@ document.addEventListener("DOMContentLoaded", function () {
            currentPlayer = "X";
        }
        return currentPlayer;
-   }
+    }
+
+    //Check for the winner
+    function winner(currentPlayer) {
+        //Array storing all possible winning combinations
+        const winningCombos= [
+            [0, 1, 2], // Top row
+            [3, 4, 5], // Middle row
+            [6, 7, 8], // Bottom row
+            [0, 3, 6], // Left column
+            [1, 4, 7], // Middle column
+            [2, 5, 8], // Right column
+            [0, 4, 8], // Diagonal Left
+            [2, 4, 6]  // Diagonal Right
+        ];
+
+        //Loop through combos check if player has won
+        for (let i = 0; i < winningCombos.length; i++) {
+            const combination = winningCombos[i];
+            const [a, b, c] = combination;
+
+            //Check if marks in the combination are the same
+            if (boardState[a] === currentPlayer && boardState[b] === currentPlayer && boardState[c] === currentPlayer) {
+                return true;   //player has winning combo
+            }
+        }
+        return false; //player does not have winning combo
+    };
+
 });
+
+
+
+
+
+
+
 
 
