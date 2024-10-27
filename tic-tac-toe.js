@@ -48,6 +48,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentPlayer= switchPlayer(currentPlayer);
             }
         }
+        else {
+            //Notify player that square cannot be changed
+            alert("Square is occupied. Select another square.");    
+        }
     }
 
     // Function to add hover effects to squares
